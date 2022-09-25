@@ -1,17 +1,21 @@
-import express from 'express'
-import * as dotenv from 'dotenv'
+import express from "express";
+import * as dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
+import router from "../routes/index.js";
 
-import router from '../routes/index.js'
+dotenv.config();
+const app = express();
+app.use(router);
+app.use(express.json());
 
-dotenv.config()
+const prisma = new PrismaClient();
 
-const app = express()
-
-app.use(router)
-
-app.use(express.json())
+async function query() {
+  const query = await prisma.clientes.findMany();
+  console.log(query);
+}
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`)
-})
-
+  console.log(`Server is running on port ${process.env.PORT}`);
+  query()
+});
