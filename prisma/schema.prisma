@@ -45,6 +45,61 @@ model Agendamentos {
   hora_inicio String
   hora_fim    String
   valor       String
+  createdAt   DateTime @default(now())
+}
+
+model Fornecedor {
+  id          String   @id @default(uuid())
+  nome        String
+  tipo_pessoa String
+  cnpj        String
+  cpf         String
+  telefone    String
+  email       String
+  ativo       Boolean
+  createdAt   DateTime @default(now())
+  Compras     Compras? @relation(fields: [comprasId], references: [id])
+  comprasId   String?
+}
+
+model Compras {
+  id             String       @id @default(uuid())
+  estoqueId      String
+  estoque        Estoque[]
+  valor_unitario String
+  valor_total    String
+  quantidade     String
+  fornecedorId   String
+  fornecedor     Fornecedor[]
+  createdAt      DateTime     @default(now())
+}
+
+model Estoque {
+  id           String   @id @default(uuid())
+  nome_produto String
+  preco_venda  String
+  createdAt    DateTime @default(now())
+  quantidade   String
+  ativo        Boolean
+  Compras      Compras? @relation(fields: [comprasId], references: [id])
+  comprasId    String?
+}
+
+model Vendas {
+  id            String   @id @default(uuid())
+  agendamentoId String?
+  estoqueId     String?
+  clienteId     String?
+  createdAt     DateTime @default(now())
+  total         String
+  comprovante   String?
+}
+
+model Caixa {
+  id        String   @id @default(uuid())
+  vendaId   String
+  valor     String
+  createdAt DateTime @default(now())
 }
 
 enum Role {
