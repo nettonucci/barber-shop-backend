@@ -1,0 +1,35 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Endpoint to check if the API is running.",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Endpoint to check if the API is running.",
+        "parameters": [],
+        "responses": {}
+      }
+    }
+  }
+}
