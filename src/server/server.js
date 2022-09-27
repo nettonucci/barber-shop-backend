@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import swaggerUi from "swagger-ui-express";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
+import chalk from "chalk";
+
 const swaggerDocument = require("../utils/swagger/swagger_output.json");
 import router from "../routes/index.js";
 import { verifyEnvs } from "../utils/verifyEnvs.js";
@@ -15,12 +17,12 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
-/**
-async function teste() {
-  const queries = await prisma.clientes.findMany();
-  console.log(queries);
-}
- */
+await prisma.$connect().then(() => {
+  console.log(chalk.green(`[Database] [CONNECTED - ${process.env.DATABASE_TYPE}]`));
+}).catch((err) => {
+  console.log(chalk.red(`[Database] [ERROR - ${process.env.DATABASE_TYPE}]`));
+  console.log(err);
+});
 
 verifyEnvs();
 
@@ -28,5 +30,4 @@ app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
-  //teste()
 });

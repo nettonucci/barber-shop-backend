@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node src/utils/swagger/swagger.js && nodemon src/server/server.js",
-    "start": "node src/utils/swagger/swagger.js && node src/server/server.js"
+    "dev": "npm run migration:run && node src/utils/swagger/swagger.js && nodemon src/server/server.js",
+    "start": "npm run migration:run && node src/utils/swagger/swagger.js && node src/server/server.js",
+    "migration:run": "npx prisma migrate deploy"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.3.1",
+    "chalk": "^5.0.1",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "swagger-autogen": "^2.22.0",
