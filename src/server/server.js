@@ -15,16 +15,18 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
-async function query() {
-  const query = await prisma.clientes.findMany();
-  console.log(query);
+/**
+async function teste() {
+  const queries = await prisma.clientes.findMany();
+  console.log(queries);
 }
+ */
 
 verifyEnvs();
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port: ${process.env.PORT}`);
-  query();
+  console.log(`Server is running on port ${process.env.PORT}`);
+  teste()
 });
