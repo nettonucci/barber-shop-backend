@@ -1,6 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
+
+async function hashPassword(password) {
+  const senha = await bcrypt
+    .hash(password, parseInt(process.env.SALT))
+    .then((hash) => {
+      return hash;
+    });
+
+  return senha;
+}
 
 export const buscarTodosOsClientes = async (req, res) => {
   try {
@@ -33,7 +43,7 @@ export const buscarTodosOsClientes = async (req, res) => {
 
     await res.status(200).json(clientes);
   } catch (error) {
-    res.status(500).send("Internal Server Error: " + error.message);
+    res.status(400).send(error.message);
   }
 };
 
@@ -79,7 +89,7 @@ export const buscarCliente = async (req, res) => {
 
     res.status(200).json(clientes);
   } catch (error) {
-    res.status(500).send("Internal Server Error: " + error.message);
+    res.status(400).send(error.message);
   }
 };
 
@@ -94,7 +104,8 @@ export const criarCliente = async (req, res) => {
       logradouro,
       nascimento,
       ativo,
-      passwords,
+      email,
+      password,
     } = req.body;
 
     if (
@@ -106,7 +117,8 @@ export const criarCliente = async (req, res) => {
       !logradouro &&
       !nascimento &&
       !ativo &&
-      !passwords
+      !email &&
+      !password
     ) {
       res.status(400).send("Missing parameters.");
     } else {
@@ -120,13 +132,16 @@ export const criarCliente = async (req, res) => {
           logradouro,
           nascimento,
           ativo,
-          passwords,
+          email,
+          password: await hashPassword(password),
         },
       });
+
+      //clientes.password = undefined;
       res.status(200).json(criar);
     }
   } catch (error) {
-    res.status(500).send("Internal Server Error: " + error.message);
+    res.status(400).send(error.message);
   }
 };
 
@@ -140,7 +155,7 @@ export const deletarCliente = async (req, res) => {
     });
     res.status(200).json(deletar);
   } catch (error) {
-    res.status(500).send("Internal Server Error: " + error.message);
+    res.status(400).send(error.message);
   }
 };
 
@@ -156,7 +171,8 @@ export const updateCliente = async (req, res) => {
       logradouro,
       nascimento,
       ativo,
-      passwords,
+      email,
+      password,
     } = req.body;
 
     if (!id) {
@@ -173,12 +189,13 @@ export const updateCliente = async (req, res) => {
           logradouro,
           nascimento,
           ativo,
-          passwords,
+          email,
+          password: await hashPassword(password),
         },
       });
       res.json(atualizar);
     }
   } catch (error) {
-    res.status(500).send("Internal Server Error: " + error.message);
+    res.status(400).send(error.message);
   }
 };
