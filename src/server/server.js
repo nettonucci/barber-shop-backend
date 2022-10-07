@@ -17,12 +17,17 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
-await prisma.$connect().then(() => {
-  console.log(chalk.green(`[Database] [CONNECTED - ${process.env.DATABASE_TYPE}]`));
-}).catch((err) => {
-  console.log(chalk.red(`[Database] [ERROR - ${process.env.DATABASE_TYPE}]`));
-  console.log(err);
-});
+await prisma
+  .$connect()
+  .then(() => {
+    console.log(
+      chalk.green(`[Database] [CONNECTED - ${process.env.DATABASE_TYPE}]`)
+    );
+  })
+  .catch((err) => {
+    console.log(chalk.red(`[Database] [ERROR - ${process.env.DATABASE_TYPE}]`));
+    console.log(err);
+  });
 
 verifyEnvs();
 
