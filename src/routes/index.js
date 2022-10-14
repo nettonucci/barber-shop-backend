@@ -1,10 +1,10 @@
 import express from "express";
-import * as clientes from "../controllers/clientes.js";
+import * as clientes from "../controllers/clientesController.js";
 import bodyParser from "body-parser";
-var jsonParser = bodyParser.json();
-
 import healthController from "../controllers/healthController.js";
+import * as login from "../controllers/sessionController.js";
 
+var jsonParser = bodyParser.json();
 const router = express.Router();
 
 router.get(
@@ -31,7 +31,7 @@ router.get("/clientes/search", jsonParser, clientes.buscarCliente);
  * Passar JSON completo pra criar um cliente
  * name: String, cpf: String, telefone: String, cidade: String,
  * estado: String, logradouro: String, nascimento: String,
- * ativo: Boolean, passwords: String
+ * ativo: Boolean, password: String
  */
 router.post("/clientes/create", jsonParser, clientes.criarCliente);
 
@@ -49,5 +49,7 @@ router.delete("/clientes/delete", jsonParser, clientes.deletarCliente);
  * ativo: Boolean, passwords: String
  */
 router.put("/clientes/update", jsonParser, clientes.updateCliente);
+
+router.get("/login", jsonParser, login.efetuarLogin);
 
 export default router;
