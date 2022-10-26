@@ -46,7 +46,7 @@ export const gerarRecovery = async (req, res) => {
             res.status(400).json(error.message);
           }
         } else {
-          res.status(200).json("Error: Email and CPF do not match.");
+          res.status(400).json("Error: Email and CPF do not match.");
         }
       } catch (error) {
         res.status(400).json(error.message);
