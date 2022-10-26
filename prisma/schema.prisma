@@ -24,8 +24,9 @@ model Clientes {
   password   String
   email      String   @unique
 
-  role         Role           @default(USER)
-  Agendamentos Agendamentos[]
+  role          Role            @default(USER)
+  Agendamentos  Agendamentos[]
+  ResetPassword ResetPassword[]
 }
 
 model Cortes {
@@ -106,4 +107,12 @@ model Caixa {
 enum Role {
   USER
   ADMIN
+}
+
+model ResetPassword {
+  id        String   @id @default(uuid())
+  cliente   Clientes @relation(fields: [clienteId], references: [id])
+  clienteId String   @unique
+  recovery  String
+  createdAt DateTime @default(now())
 }
