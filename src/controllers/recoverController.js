@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import jwb from "jsonwebtoken";
 
 //estudar importação e exportação
 async function hashPassword(password) {
