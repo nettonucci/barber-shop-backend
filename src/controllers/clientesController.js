@@ -50,23 +50,28 @@ export const buscarTodosOsClientes = async (req, res) => {
 
 export const buscarCliente = async (req, res) => {
   try {
-    const { name, cpf, telefone, nascimento, ativo } = req.body;
-    const { page = 0, order = "desc", limit = 10 } = req.query;
+    const {
+      name,
+      cpf,
+      telefone,
+      nascimento,
+      ativo,
+      page = 0,
+      order = "desc",
+      limit = 10,
+    } = req.body;
 
     if (
-      req.body.name !== null ||
-      req.body.cpf !== null ||
-      req.body.telefone !== null ||
-      req.body.nascimento !== null ||
-      req.body.ativo !== null
+      (name === undefined || name === "") &&
+      (cpf === undefined || cpf === "") &&
+      (telefone === undefined || telefone === "") &&
+      (nascimento === undefined || nascimento === "") &&
+      (ativo === undefined || ativo === "")
     ) {
-      console.log(
-        req.body.name,
-        req.body.cpf,
-        req.body.telefone,
-        req.body.nascimento,
-        req.body.ativo
-      );
+      res
+        .status(400)
+        .json({ message: "You need to search something, not everything :P" });
+    } else {
       const clientesAsync = async () => {
         const clientesCount = await prisma.clientes.count({
           where: {
@@ -109,10 +114,6 @@ export const buscarCliente = async (req, res) => {
       };
 
       res.status(200).json(clientes);
-    } else {
-      res
-        .status(400)
-        .json({ message: "You need to search something, not everything :P" });
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
