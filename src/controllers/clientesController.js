@@ -44,54 +44,79 @@ export const buscarTodosOsClientes = async (req, res) => {
 
     await res.status(200).json(clientes);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 };
 
 export const buscarCliente = async (req, res) => {
   try {
-    const { name, cpf, telefone, nascimento, ativo } = req.body;
-    const { page = 0, order = "desc", limit = 10 } = req.query;
+    const {
+      name,
+      cpf,
+      telefone,
+      nascimento,
+      ativo,
+      page = 0,
+      order = "desc",
+      limit = 10,
+    } = req.body;
 
-    const clientesAsync = async () => {
-      const clientesCount = await prisma.clientes.count({
-        where: {
-          name: { contains: name, mode: "insensitive" },
-          cpf: { contains: cpf },
-          telefone: { contains: telefone },
-          nascimento: { contains: nascimento },
-          ativo: ativo,
-        },
+    if (
+      (name === undefined || name === "") &&
+      (cpf === undefined || cpf === "") &&
+      (telefone === undefined || telefone === "") &&
+      (nascimento === undefined || nascimento === "") &&
+      (ativo === undefined || ativo === "")
+    ) {
+      res.status(400).json({
+        message: "Você precisa informar algum campo para essa pesquisa.",
       });
+    } else {
+      const clientesAsync = async () => {
+        const clientesCount = await prisma.clientes.count({
+          where: {
+            name: { contains: name, mode: "insensitive" },
+            cpf: { contains: cpf },
+            telefone: { contains: telefone },
+            nascimento: { contains: nascimento },
+            ativo: ativo,
+          },
+        });
 
-      const clientesSearch = await prisma.clientes.findMany({
-        take: limit,
-        skip: page,
-        where: {
-          name: { contains: name, mode: "insensitive" },
-          cpf: { contains: cpf },
-          telefone: { contains: telefone },
-          nascimento: { contains: nascimento },
-          ativo: ativo,
+        const clientesSearch = await prisma.clientes.findMany({
+          take: limit,
+          skip: page,
+          where: {
+            name: { contains: name, mode: "insensitive" },
+            cpf: { contains: cpf },
+            telefone: { contains: telefone },
+            nascimento: { contains: nascimento },
+            ativo: ativo,
+          },
+          orderBy: {
+            name: order,
+          },
+        });
+
+        return [clientesCount, clientesSearch];
+      };
+
+      const clientesArray = await clientesAsync();
+
+      const clientes = {
+        info: {
+          total: clientesArray[0],
+          page: page,
+          order: order,
+          limit: limit,
         },
-        orderBy: {
-          name: order,
-        },
-      });
+        data: clientesArray[1],
+      };
 
-      return [clientesCount, clientesSearch];
-    };
-
-    const clientesArray = await clientesAsync();
-
-    const clientes = {
-      info: { total: clientesArray[0], page: page, order: order, limit: limit },
-      data: clientesArray[1],
-    };
-
-    res.status(200).json(clientes);
+      res.status(200).json(clientes);
+    }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -122,7 +147,7 @@ export const criarCliente = async (req, res) => {
       !email &&
       !password
     ) {
-      res.status(400).send("Missing parameters.");
+      res.status(400).json("Faltando parâmetros.");
     } else {
       const clienteCriado = await prisma.clientes.create({
         data: {
@@ -143,7 +168,7 @@ export const criarCliente = async (req, res) => {
       res.status(200).json(clienteCriado);
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -159,7 +184,7 @@ export const deletarCliente = async (req, res) => {
     clienteDeletado.password = undefined;
     res.status(200).json(clienteDeletado);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -202,6 +227,6 @@ export const updateCliente = async (req, res) => {
       res.json(clienteAtualizado);
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 };

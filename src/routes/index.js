@@ -1,8 +1,9 @@
 import express from "express";
-import * as clientes from "../controllers/clientesController.js";
 import bodyParser from "body-parser";
 import healthController from "../controllers/healthController.js";
+import * as clientes from "../controllers/clientesController.js";
 import * as session from "../controllers/sessionController.js";
+import * as recover from "../controllers/recoverController.js";
 
 var jsonParser = bodyParser.json();
 const router = express.Router();
@@ -25,7 +26,7 @@ router.get(
 router.get("/clientes", clientes.buscarTodosOsClientes);
 
 //Can use queries = default: page = 0, order = "desc", limit = 10
-router.get("/clientes/search", jsonParser, clientes.buscarCliente);
+router.post("/clientes/search", jsonParser, clientes.buscarCliente);
 
 /**
  * Passar JSON completo pra criar um cliente
@@ -53,5 +54,8 @@ router.put("/clientes/update", jsonParser, clientes.updateCliente);
 router.get("/login", jsonParser, session.efetuarLogin);
 
 router.put("/trocarsenha", jsonParser, session.trocarSenha);
+
+router.post("/recover/password", jsonParser, recover.gerarRecovery);
+router.post("/recover/newpassword", jsonParser, recover.novaSenha);
 
 export default router;

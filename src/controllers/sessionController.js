@@ -62,7 +62,7 @@ export const trocarSenha = async (req, res) => {
       },
     });
     // aqui é bom setar undefined pra password também?
-    res.status(200).json({ message: "Senha Atualizada com sucesso!." });
+    res.status(200).json({ message: "Senha Atualizada com sucesso!" });
   } catch (error) {
     res.status(500).json(error.message);
   }
