@@ -26,7 +26,7 @@ router.get(
 router.get("/clientes", clientes.buscarTodosOsClientes);
 
 //Can use queries = default: page = 0, order = "desc", limit = 10
-router.get("/clientes/search", jsonParser, clientes.buscarCliente);
+router.post("/clientes/search", jsonParser, clientes.buscarCliente);
 
 /**
  * Passar JSON completo pra criar um cliente

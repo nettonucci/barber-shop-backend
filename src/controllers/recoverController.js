@@ -90,13 +90,18 @@ export const novaSenha = async (req, res) => {
             });
           })
           .then(async () => {
-            res.status(200).json({ message: "Password changed successfully." });
+            res.status(200).json({ message: "Senha alterada com sucesso." });
           });
       } else {
-        res.status(400).json({ message: "Something don't match." });
+        res
+          .status(400)
+          .json({
+            message:
+              "Alguma coisa deu errado, verifique novamente as informações utilizadas.",
+          });
       }
     } else {
-      res.status(400).json({ message: "Recover do not exist" });
+      res.status(400).json({ message: "Chave de recuperação não existe." });
     }
   } catch (error) {
     res.status(400).json({ message: error.message });

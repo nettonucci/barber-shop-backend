@@ -68,9 +68,9 @@ export const buscarCliente = async (req, res) => {
       (nascimento === undefined || nascimento === "") &&
       (ativo === undefined || ativo === "")
     ) {
-      res
-        .status(400)
-        .json({ message: "You need to search something, not everything :P" });
+      res.status(400).json({
+        message: "Você precisa informar algum campo para essa pesquisa.",
+      });
     } else {
       const clientesAsync = async () => {
         const clientesCount = await prisma.clientes.count({
@@ -147,7 +147,7 @@ export const criarCliente = async (req, res) => {
       !email &&
       !password
     ) {
-      res.status(400).json("Missing parameters.");
+      res.status(400).json("Faltando parâmetros.");
     } else {
       const clienteCriado = await prisma.clientes.create({
         data: {
