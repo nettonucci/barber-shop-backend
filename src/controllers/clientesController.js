@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+
 const prisma = new PrismaClient();
 
 async function hashPassword(password) {
@@ -62,6 +63,7 @@ export const buscarCliente = async (req, res) => {
           ativo: ativo,
         },
       });
+
       const clientesSearch = await prisma.clientes.findMany({
         take: limit,
         skip: page,
@@ -122,7 +124,7 @@ export const criarCliente = async (req, res) => {
     ) {
       res.status(400).send("Missing parameters.");
     } else {
-      const criar = await prisma.clientes.create({
+      const clienteCriado = await prisma.clientes.create({
         data: {
           name,
           cpf,
@@ -137,8 +139,8 @@ export const criarCliente = async (req, res) => {
         },
       });
 
-      //clientes.password = undefined;
-      res.status(200).json(criar);
+      clienteCriado.password = undefined;
+      res.status(200).json(clienteCriado);
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -148,12 +150,14 @@ export const criarCliente = async (req, res) => {
 export const deletarCliente = async (req, res) => {
   try {
     const { id } = req.body;
-    const deletar = await prisma.clientes.delete({
+    const clienteDeletado = await prisma.clientes.delete({
       where: {
         id,
       },
     });
-    res.status(200).json(deletar);
+
+    clienteDeletado.password = undefined;
+    res.status(200).json(clienteDeletado);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -178,7 +182,7 @@ export const updateCliente = async (req, res) => {
     if (!id) {
       res.status(400).send("Missing parameters. Identifier can not be empty.");
     } else {
-      const atualizar = await prisma.clientes.update({
+      const clienteAtualizado = await prisma.clientes.update({
         where: { id },
         data: {
           name,
@@ -193,7 +197,9 @@ export const updateCliente = async (req, res) => {
           password: await hashPassword(password),
         },
       });
-      res.json(atualizar);
+
+      clienteAtualizado.password = undefined;
+      res.json(clienteAtualizado);
     }
   } catch (error) {
     res.status(400).send(error.message);

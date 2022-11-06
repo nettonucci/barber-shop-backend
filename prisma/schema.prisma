@@ -18,7 +18,7 @@ model Clientes {
   cidade     String
   estado     String
   logradouro String
-  nascimento DateTime
+  nascimento String
   createdAt  DateTime @default(now())
   ativo      Boolean  @default(true)
   password   String
@@ -30,7 +30,7 @@ model Clientes {
 
 model Cortes {
   id           String         @id @default(uuid())
-  name         DateTime       @default(now())
+  name         String
   time         String         @default("60")
   valor        String
   Agendamentos Agendamentos[]
@@ -53,7 +53,7 @@ model Fornecedor {
   id          String   @id @default(uuid())
   nome        String
   tipo_pessoa String
-  cnpj        String
+  cnpj        String   @unique
   cpf         String
   telefone    String
   email       String
