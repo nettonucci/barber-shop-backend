@@ -2,7 +2,7 @@ import express from "express";
 import * as clientes from "../controllers/clientesController.js";
 import bodyParser from "body-parser";
 import healthController from "../controllers/healthController.js";
-import * as login from "../controllers/sessionController.js";
+import * as session from "../controllers/sessionController.js";
 
 var jsonParser = bodyParser.json();
 const router = express.Router();
@@ -50,6 +50,8 @@ router.delete("/clientes/delete", jsonParser, clientes.deletarCliente);
  */
 router.put("/clientes/update", jsonParser, clientes.updateCliente);
 
-router.get("/login", jsonParser, login.efetuarLogin);
+router.get("/login", jsonParser, session.efetuarLogin);
+
+router.put("/trocarsenha", jsonParser, session.trocarSenha);
 
 export default router;
