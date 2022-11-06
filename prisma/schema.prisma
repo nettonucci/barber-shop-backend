@@ -12,16 +12,17 @@ datasource db {
 
 model Clientes {
   id         String   @id @default(uuid())
-  name       String   @unique
-  cpf        String
+  name       String
+  cpf        String   @unique
   telefone   String
   cidade     String
   estado     String
   logradouro String
   nascimento DateTime
   createdAt  DateTime @default(now())
-  ativo      Boolean
-  passwords  String
+  ativo      Boolean  @default(true)
+  password   String
+  email      String   @unique
 
   role         Role           @default(USER)
   Agendamentos Agendamentos[]
